@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+venv/
+.venv/
+
+# Environment
+.env
+
+# Flutter
+frontend/.packages
+frontend/.pub/
+frontend/build/
+frontend/.dart_tool/
+
+# Docker
+docker-compose.override.yml
+
+# AI
+ai_engine/models/*.onnx
+ai_engine/data/raw/*.csv
+ai_engine/data/processed/*
+
+# IDE
+.idea/
+.vscode/
