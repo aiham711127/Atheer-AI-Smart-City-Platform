@@ -1,0 +1,122 @@
+version: '3.8'
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: atheer_db
+    environment:
+      POSTGRES_DB: atheer_db
+      POSTGRES_USER: atheer_user
+      POSTGRES_PASSWORD: atheer_password_secure
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U atheer_user -d atheer_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: atheer_redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: atheer_qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      QDRANT__SERVICE__GRPC_PORT: 6334
+
+volumes:
+  postgres_data:
+  qdrant_data:
+
+
+
+
+
+
+
+
+
+
+
+
+
+# version: '3.8'
+
+# services:
+#   db:
+#     image: pgvector/pgvector:pg16
+#     container_name: atheer_db
+#     environment:
+#       POSTGRES_DB: atheer_db
+#       POSTGRES_USER: atheer_user
+#       POSTGRES_PASSWORD: atheer_password_secure
+#     ports:
+#       - "5432:5432"
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+#     healthcheck:
+#       test: ["CMD-SHELL", "pg_isready -U atheer_user -d atheer_db"]
+#       interval: 5s
+#       timeout: 5s
+#       retries: 5
+
+#   redis:
+#     image: redis:7.2-alpine
+#     container_name: atheer_redis
+#     ports:
+#       - "6379:6379"
+#     healthcheck:
+#       test: ["CMD", "redis-cli", "ping"]
+#       interval: 5s
+#       timeout: 5s
+#       retries: 5
+
+#   qdrant:
+#     image: qdrant/qdrant:latest
+#     container_name: atheer_qdrant
+#     ports:
+#       - "6333:6333"
+#       - "6334:6334"
+#     volumes:
+#       - qdrant_data:/qdrant/storage
+#     environment:
+#       QDRANT__SERVICE__GRPC_PORT: 6334
+
+#   backend:
+#     build:
+#       context: ../backend
+#       dockerfile: Dockerfile
+#     container_name: atheer_backend
+#     ports:
+#       - "8000:8000"
+#     env_file:
+#       - ../.env
+#     depends_on:
+#       db:
+#         condition: service_healthy
+#       redis:
+#         condition: service_healthy
+#       qdrant:
+#         condition: service_started
+#     volumes:
+#       - ../backend:/app
+
+# volumes:
+#   postgres_data:
+#   qdrant_data:
